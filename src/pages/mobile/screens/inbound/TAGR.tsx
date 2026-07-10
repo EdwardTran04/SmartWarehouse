@@ -46,7 +46,7 @@ const STATS = {
 export function ScreenTAGR({ back }: { back: () => void }) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      <TopBar brand title="Thực nhập T-AGR" sub="INB-2026-00118 · Gửi SAP" onBack={back} />
+      <TopBar brand title="Thực nhập" sub="INB-2026-00118 · Gửi SAP" onBack={back} />
 
       {/* Stats Cards */}
       <div className="px-4 mt-3">
@@ -107,10 +107,7 @@ export function ScreenTAGR({ back }: { back: () => void }) {
               </div>
               <div className="text-right">
                 {it.hasSerial ? (
-                  <div className={`px-2 py-1 rounded-lg ${it.isPassed ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
-                    <div className="text-[10px] font-medium">{it.isPassed ? "Đạt" : "Không đạt"}</div>
-                    <div className="text-[11px] font-bold">{it.serial?.slice(-6)}</div>
-                  </div>
+                  <div className="text-[11px] text-slate-600">Serial: <span className="font-bold text-slate-900">{it.serial?.slice(-6)}</span></div>
                 ) : (
                   <div className="text-[22px] font-bold text-slate-900">{it.qtyPassed + it.qtyFailed}</div>
                 )}
@@ -141,7 +138,7 @@ export function ScreenTAGR({ back }: { back: () => void }) {
       {/* Bottom Action */}
       <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-4">
         <Btn full>
-          Gửi SAP / VERP
+          Xác thực
         </Btn>
       </div>
     </div>
