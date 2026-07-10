@@ -43,7 +43,7 @@ const BOX_STATS = {
   ],
 };
 
-export function ScreenPack({ back }: { back: () => void }) {
+export function ScreenPack({ back, goHome }: { back: () => void; goHome: () => void }) {
   const [items, setItems] = useState(PACK_ITEMS);
   const [showExtendModal, setShowExtendModal] = useState(false);
   const [extendMins, setExtendMins] = useState(30);
@@ -186,7 +186,7 @@ export function ScreenPack({ back }: { back: () => void }) {
           <Btn variant="outline" size="sm" icon={Printer}>
             In tem
           </Btn>
-          <Btn size="sm" icon={CheckCircle2}>
+          <Btn size="sm" icon={CheckCircle2} onClick={goHome}>
             Hoàn thành
           </Btn>
         </div>

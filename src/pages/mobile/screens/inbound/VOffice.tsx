@@ -4,15 +4,19 @@ import { Btn, Card, Row } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
 /* =============================================================
-   SCREEN: 9. VOFFICE - Ký VOffice
+   SCREEN: 11. VOFFICE - Ký VOffice
 ============================================================ */
-export function ScreenVOffice({ back }: { back: () => void }) {
+export function ScreenVOffice({ back, goHome }: { back: () => void; goHome: () => void }) {
   const [showExtendModal, setShowExtendModal] = useState(false);
   const [extendMins, setExtendMins] = useState(30);
   const [extendReason, setExtendReason] = useState("");
 
   const handleExtend = () => {
     setShowExtendModal(false);
+  };
+
+  const handleSign = () => {
+    goHome();
   };
 
   return (
@@ -53,7 +57,7 @@ export function ScreenVOffice({ back }: { back: () => void }) {
         </Card>
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-4">
-        <Btn full icon={PenLine}>
+        <Btn full icon={PenLine} onClick={handleSign}>
           Ký xác nhận VOffice
         </Btn>
       </div>

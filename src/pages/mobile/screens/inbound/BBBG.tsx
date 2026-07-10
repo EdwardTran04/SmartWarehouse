@@ -154,9 +154,8 @@ export function ScreenBBBG({ back, done }: { back: () => void; done: () => void 
           full
           icon={CheckCircle2}
           onClick={handleConfirm}
-          disabled={!hasSigned}
         >
-          {hasSigned ? "Xác nhận & Hoàn tất bàn giao" : "Vui lòng ký trước"}
+          Hoàn thành
         </Btn>
       </div>
 

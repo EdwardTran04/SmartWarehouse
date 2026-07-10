@@ -27,6 +27,7 @@ import {
   ScreenNotify,
   ScreenScan,
   ScreenProfile,
+  ScreenStaffProfile,
 } from "./screens";
 import { PhoneFrame, BottomNav } from "./components/layout";
 
@@ -66,19 +67,20 @@ export default function MobileApp() {
       case "task": return <ScreenTask back={back} go={go} />;
       case "receive": return <ScreenReceive back={back} />;
       case "vehicle": return <ScreenVehicle back={back} goScan={(vehicleId) => { setSelectedVehicleId(vehicleId); go("scan"); }} />;
-      case "unload": return <ScreenUnload back={back} />;
-      case "check": return <ScreenCheck back={back} goBBBG={() => go("bbbg")} />;
+      case "unload": return <ScreenUnload back={back} goHome={() => navTo("home")} />;
+      case "check": return <ScreenCheck back={back} goHome={() => navTo("home")} />;
       case "bbbg": return <ScreenBBBG back={back} done={back} />;
-      case "tagr": return <ScreenTAGR back={back} />;
-      case "voffice": return <ScreenVOffice back={back} />;
-      case "pack": return <ScreenPack back={back} />;
-      case "putaway": return <ScreenPutaway back={back} />;
+      case "tagr": return <ScreenTAGR back={back} goVOffice={() => navTo("voffice")} />;
+      case "voffice": return <ScreenVOffice back={back} goHome={() => navTo("home")} />;
+      case "pack": return <ScreenPack back={back} goHome={() => navTo("home")} />;
+      case "putaway": return <ScreenPutaway back={back} goHome={() => navTo("home")} />;
       case "approve": return <ScreenApprove back={back} />;
       case "inboundOrderList": return <ScreenInboundOrderList back={back} goReceive={() => go("receive")} />;
       case "worker": return <ScreenWorker back={back} />;
       case "notify": return <ScreenNotify back={back} />;
       case "scan": return <ScreenScan back={back} />;
       case "profile": return <ScreenProfile back={back} go={go} />;
+      case "staffProfile": return <ScreenStaffProfile back={back} />;
       case "outConfirm": return <ScreenOutConfirm back={back} />;
       case "outPick": return <ScreenOutPick back={back} />;
       case "outKcs": return <ScreenOutKcs back={back} />;

@@ -18,7 +18,7 @@ export function ScreenProfile({ back, go }: { back: () => void; go: (s: Screen) 
         <Card className="p-4 flex items-center gap-3">
           <div className="w-14 h-14 rounded-full bg-brand text-white flex items-center justify-center font-bold text-[18px]">LK</div>
           <div className="flex-1">
-            <div className="font-bold text-[15px]">Trần Văn Kho</div>
+            <div className="font-bold text-[15px]">Trần Mình Quân</div>
             <div className="text-[12px] text-slate-500">nv.kho.hn01 · Thủ kho HN01</div>
           </div>
           <Badge tone="done">Online</Badge>

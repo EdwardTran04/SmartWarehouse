@@ -1,9 +1,10 @@
 import { CheckCircle2, Package, XCircle } from "lucide-react";
+import { useState } from "react";
 import { Badge, Btn, Card } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
 /* =============================================================
-   SCREEN: 8. T-AGR - Thực nhập T-AGR
+   SCREEN: 10. T-AGR - Thực nhập T-AGR
    Data from SAP auto-returned with stats cards
 ============================================================ */
 type TagrItem = {
@@ -43,7 +44,9 @@ const STATS = {
   m3Failed: TAGR_ITEMS.reduce((s, i) => s + i.m3Failed, 0),
 };
 
-export function ScreenTAGR({ back }: { back: () => void }) {
+export function ScreenTAGR({ back, goVOffice }: { back: () => void; goVOffice: () => void }) {
+  const [showConfirm, setShowConfirm] = useState(false);
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <TopBar brand title="Thực nhập" sub="INB-2026-00118 · Gửi SAP" onBack={back} />
@@ -137,10 +140,24 @@ export function ScreenTAGR({ back }: { back: () => void }) {
 
       {/* Bottom Action */}
       <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-4">
-        <Btn full>
-          Xác thực
+        <Btn full icon={CheckCircle2} onClick={() => setShowConfirm(true)}>
+          Hoàn thành
         </Btn>
       </div>
+
+      {/* Confirm Modal */}
+      {showConfirm && (
+        <div className="absolute inset-0 z-50 bg-black/40 flex items-end" onClick={() => setShowConfirm(false)}>
+          <div className="w-full bg-white rounded-t-2xl p-4 pb-6 space-y-3" onClick={(e) => e.stopPropagation()}>
+            <div className="text-[16px] font-bold text-slate-900 text-center">Xác nhận hoàn thành</div>
+            <div className="text-[13px] text-slate-600 text-center">Bạn xác nhận đã hoàn thành thực nhập hàng cho lô <b>INB-2026-00118</b>?</div>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Btn variant="outline" full onClick={() => setShowConfirm(false)}>Hủy</Btn>
+              <Btn full onClick={() => { setShowConfirm(false); goVOffice(); }}>Xác nhận</Btn>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -30,7 +30,7 @@ const MOCK_ITEMS: LineItem[] = [
   { id: "L6", sku: "SP-A006", name: "Keo dán chuyên dụng", rfid: "RFID-0006-E5", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, docQty: 35, realQty: 35 },
 ];
 
-export function ScreenCheck({ back, goBBBG }: { back: () => void; goBBBG: () => void }) {
+export function ScreenCheck({ back, goHome }: { back: () => void; goHome: () => void }) {
   const [items] = useState<LineItem[]>(MOCK_ITEMS);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState<"accept" | "reject" | null>(null);
@@ -47,7 +47,7 @@ export function ScreenCheck({ back, goBBBG }: { back: () => void; goBBBG: () => 
     if (confirmAction === "reject" && !rejectReason.trim()) return;
     setShowConfirmModal(false);
     if (confirmAction === "accept") {
-      goBBBG();
+      goHome();
     } else {
       setConfirmAction(null);
       setRejectReason("");

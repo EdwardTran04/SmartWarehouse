@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, Package, Truck, XCircle } from "lucide-react";
+import { CheckCircle2, Package, Truck, Users, XCircle } from "lucide-react";
 import { Badge, Btn, Card } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
@@ -55,6 +55,11 @@ const ORDER_LIST: Order[] = [
 
 export function ScreenApprove({ back }: { back: () => void }) {
   const [tab, setTab] = useState<"staff" | "orders">("staff");
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleApprove = () => {
+    setShowSuccess(true);
+  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -154,15 +159,28 @@ export function ScreenApprove({ back }: { back: () => void }) {
 
       {/* Bottom Actions */}
       <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-4">
-        <div className="grid grid-cols-2 gap-2">
-          <Btn variant="outline" icon={XCircle}>
-            Từ chối
-          </Btn>
-          <Btn icon={CheckCircle2}>
-            Phê duyệt
-          </Btn>
-        </div>
+        <Btn full icon={CheckCircle2} onClick={handleApprove}>
+          Phê duyệt
+        </Btn>
       </div>
+
+      {/* Success Notification */}
+      {showSuccess && (
+        <div className="absolute inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => { setShowSuccess(false); back(); }}>
+          <div className="w-full max-w-sm bg-white rounded-2xl p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+            </div>
+            <div className="text-center">
+              <div className="text-[18px] font-bold text-slate-900">Phê duyệt thành công!</div>
+              <div className="text-[13px] text-slate-500 mt-1">Phân công đã được ghi nhận và gửi thông báo đến nhân sự liên quan.</div>
+            </div>
+            <Btn full onClick={() => { setShowSuccess(false); back(); }}>
+              Đóng
+            </Btn>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

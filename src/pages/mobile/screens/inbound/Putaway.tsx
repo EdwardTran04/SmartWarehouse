@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { CheckCircle2, Clock, RefreshCw, XCircle } from "lucide-react";
+import { Camera, CheckCircle2, Clock, RefreshCw, XCircle } from "lucide-react";
 import { Badge, Btn, Card } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
 /* =============================================================
-   SCREEN: 11. PUTAWAY - Cất hàng
+   SCREEN: 13. PUTAWAY - Cất hàng
 ============================================================ */
 type PutawayItem = {
   hu: string;
@@ -23,14 +23,24 @@ const PUTAWAY_ITEMS: PutawayItem[] = [
   { hu: "HU-2026-9921-04", sku: "SP-A004", name: "Cáp sạc USB-C 1m", boxType: "Carton 100", rfid: "RFID-0004-C3", location: "G05-A01-T01", locationList: ["G04-B02-T03", "G04-B02-T04", "G04-B03-T01", "G05-A01-T01"] },
 ];
 
-export function ScreenPutaway({ back }: { back: () => void }) {
+export function ScreenPutaway({ back, goHome }: { back: () => void; goHome: () => void }) {
   const [items, setItems] = useState(PUTAWAY_ITEMS);
   const [showExtendModal, setShowExtendModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [extendMins, setExtendMins] = useState(30);
   const [extendReason, setExtendReason] = useState("");
 
   const handleExtend = () => {
     setShowExtendModal(false);
+  };
+
+  const handleComplete = () => {
+    setShowPhotoModal(true);
+  };
+
+  const handleConfirmPhoto = () => {
+    setShowPhotoModal(false);
+    goHome();
   };
 
   const refreshLocation = (index: number) => {
@@ -108,10 +118,29 @@ export function ScreenPutaway({ back }: { back: () => void }) {
 
       {/* Bottom Action */}
       <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-4">
-        <Btn full icon={CheckCircle2}>
+        <Btn full icon={CheckCircle2} onClick={handleComplete}>
           Hoàn thành
         </Btn>
       </div>
+
+      {/* Photo Modal */}
+      {showPhotoModal && (
+        <div className="absolute inset-0 z-50 bg-black/40 flex items-end" onClick={() => setShowPhotoModal(false)}>
+          <div className="w-full bg-white rounded-t-2xl p-4 pb-6 space-y-3" onClick={(e) => e.stopPropagation()}>
+            <div className="text-[16px] font-bold text-slate-900 text-center">Chụp ảnh xác nhận</div>
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center">
+                <Camera className="w-10 h-10 text-slate-400" />
+              </div>
+              <p className="text-[13px] text-slate-500 text-center">Vui lòng chụp ảnh hàng hóa đã cất để xác nhận hoàn thành</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Btn variant="outline" full onClick={() => setShowPhotoModal(false)}>Hủy</Btn>
+              <Btn full onClick={handleConfirmPhoto}>Xác nhận</Btn>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Extend Modal */}
       {showExtendModal && (
