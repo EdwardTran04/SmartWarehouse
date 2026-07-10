@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 32%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 217 91% 50%;
+
+    --navy: 222 47% 16%;
+    --navy-foreground: 210 40% 98%;
+
+    --secondary: 215 25% 95%;
+    --secondary-foreground: 222 47% 16%;
+
+    --muted: 214 32% 94%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 217 91% 95%;
+    --accent-foreground: 217 91% 32%;
+
+    --success: 142 71% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 20% 88%;
+    --input: 215 20% 88%;
+    --ring: 217 91% 40%;
+
+    --radius: 0.6rem;
+
+    --sidebar-background: 222 47% 13%;
+    --sidebar-foreground: 215 20% 80%;
+    --sidebar-primary: 217 91% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 47% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 222 47% 20%;
+    --sidebar-ring: 217 91% 50%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 32%), hsl(217 91% 50%));
+    --gradient-navy: linear-gradient(135deg, hsl(222 47% 13%), hsl(222 47% 22%));
+    --shadow-card: 0 1px 3px 0 hsl(222 47% 11% / 0.06), 0 1px 2px -1px hsl(222 47% 11% / 0.06);
+    --shadow-elevated: 0 10px 30px -10px hsl(217 91% 32% / 0.18);
+
+    /* Viettel brand */
+    --brand: 350 100% 47%;            /* #EE0033 */
+    --brand-foreground: 0 0% 100%;
+    --brand-dark: 350 100% 35%;
+    --brand-soft: 350 100% 96%;
+    --gradient-brand: linear-gradient(135deg, hsl(350 100% 47%), hsl(350 100% 38%));
+    --shadow-brand: 0 8px 24px -8px hsl(350 100% 47% / 0.45);
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground font-sans antialiased; }
+}
+
+@layer components {
+  .stat-card {
+    @apply bg-card rounded-xl p-5 border border-border;
+    box-shadow: var(--shadow-card);
+  }
+  .data-table {
+    @apply w-full text-sm;
+  }
+  .data-table thead th {
+    @apply bg-muted/60 text-muted-foreground font-medium text-xs uppercase tracking-wide px-4 py-3 text-left border-b border-border;
+  }
+  .data-table tbody td {
+    @apply px-4 py-3 border-b border-border/60;
+  }
+  .data-table tbody tr:hover {
+    @apply bg-muted/40;
+  }
+}
