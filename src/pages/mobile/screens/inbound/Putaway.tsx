@@ -1,76 +1,141 @@
-import { AlertTriangle, CheckCircle2, MapPin, Navigation2, QrCode, ScanLine } from "lucide-react";
-import { Badge, Btn, Card, SectionTitle } from "../../components/ui";
-import { BottomActionBar, ExtendTimerBar } from "../../components/BottomActionBar";
+import { useState } from "react";
+import { CheckCircle2, Clock, RefreshCw, XCircle } from "lucide-react";
+import { Badge, Btn, Card } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
 /* =============================================================
-   SCREEN: 14. PUTAWAY - Cất hàng
+   SCREEN: 11. PUTAWAY - Cất hàng
 ============================================================ */
+type PutawayItem = {
+  hu: string;
+  sku: string;
+  name: string;
+  boxType: string;
+  rfid: string;
+  location: string;
+  locationList: string[];
+};
+
+const PUTAWAY_ITEMS: PutawayItem[] = [
+  { hu: "HU-2026-9921-01", sku: "SP-A001", name: "Galaxy A15 128GB", boxType: "Carton 50", rfid: "RFID-0001-A1", location: "G04-B02-T03", locationList: ["G04-B02-T03", "G04-B02-T04", "G04-B03-T01", "G05-A01-T01"] },
+  { hu: "HU-2026-9921-02", sku: "SP-A002", name: "Galaxy A25 256GB", boxType: "Carton 50", rfid: "RFID-0002-A1", location: "G04-B02-T04", locationList: ["G04-B02-T03", "G04-B02-T04", "G04-B03-T01", "G05-A01-T01"] },
+  { hu: "HU-2026-9921-03", sku: "SP-A003", name: "Tai nghe Buds Pro", boxType: "Carton 25", rfid: "RFID-0003-B2", location: "G04-B03-T01", locationList: ["G04-B02-T03", "G04-B02-T04", "G04-B03-T01", "G05-A01-T01"] },
+  { hu: "HU-2026-9921-04", sku: "SP-A004", name: "Cáp sạc USB-C 1m", boxType: "Carton 100", rfid: "RFID-0004-C3", location: "G05-A01-T01", locationList: ["G04-B02-T03", "G04-B02-T04", "G04-B03-T01", "G05-A01-T01"] },
+];
+
 export function ScreenPutaway({ back }: { back: () => void }) {
+  const [items, setItems] = useState(PUTAWAY_ITEMS);
+  const [showExtendModal, setShowExtendModal] = useState(false);
+  const [extendMins, setExtendMins] = useState(30);
+  const [extendReason, setExtendReason] = useState("");
+
+  const handleExtend = () => {
+    setShowExtendModal(false);
+  };
+
+  const refreshLocation = (index: number) => {
+    const item = items[index];
+    const currentIdx = item.locationList.indexOf(item.location);
+    const nextIdx = (currentIdx + 1) % item.locationList.length;
+    setItems((prev) => prev.map((it, i) => i === index ? { ...it, location: it.locationList[nextIdx] } : it));
+  };
+
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-slate-50">
-      <ExtendTimerBar />
-      <TopBar brand title="Putaway · Cất hàng" sub="16 HU · Khu G" onBack={back} />
-      <div className="px-4 mt-3">
-        <Card className="p-3 flex items-center gap-2">
-          <div className="flex-1 h-12 rounded-xl bg-slate-900 text-white flex items-center px-3 gap-2">
-            <ScanLine className="w-5 h-5 text-emerald-400" />
-            <input placeholder="Scan mã HU hoặc Bin..." className="flex-1 bg-transparent text-[14px] focus:outline-none placeholder:text-slate-400" />
-          </div>
-          <button className="w-12 h-12 rounded-xl bg-brand text-white flex items-center justify-center"><QrCode className="w-5 h-5" /></button>
-        </Card>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-32 space-y-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <SectionTitle title="Mini map · Khu G" icon={MapPin} />
-        <Card className="p-3">
-          <div className="grid grid-cols-8 gap-1">
-            {Array.from({ length: 32 }).map((_, i) => {
-              const t = i === 12 ? "ai" : i === 18 ? "real" : i % 7 === 0 ? "full" : i % 5 === 0 ? "doing" : "free";
-              const c = { ai: "bg-indigo-400 text-white", real: "bg-brand text-white ring-2 ring-brand-dark", full: "bg-rose-300", doing: "bg-orange-300", free: "bg-emerald-100 border border-emerald-200" }[t];
-              return <div key={i} className={`aspect-square rounded text-[8px] font-bold flex items-center justify-center ${c}`}>{t === "ai" ? "AI" : t === "real" ? "✓" : ""}</div>;
-            })}
-          </div>
-          <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-600 flex-wrap">
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-emerald-100 border border-emerald-200 rounded" /> Trống</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-indigo-400 rounded" /> AI gợi ý</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-brand rounded" /> Thực tế</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-rose-300 rounded" /> Đầy</span>
-          </div>
-        </Card>
-
-        <SectionTitle title="HU cần cất (16)" icon={QrCode} />
-        <Card className="divide-y divide-slate-100">
-          {[
-            { hu: "HU-2026-9921-01", sku: "SP-A001", qty: 50, ai: "G04-B02-T03", real: "G04-B02-T03", st: "done" as const },
-            { hu: "HU-2026-9921-02", sku: "SP-A001", qty: 50, ai: "G04-B02-T04", real: "G04-B02-T04", st: "done" as const },
-            { hu: "HU-2026-9921-03", sku: "SP-A001", qty: 50, ai: "G04-B03-T01", real: "G04-B05-T02", st: "warn" as const, override: true },
-            { hu: "HU-2026-9921-04", sku: "SP-A001", qty: 50, ai: "G04-B03-T02", real: "—", st: "idle" as const },
-          ].map((h) => (
-            <div key={h.hu} className="p-3">
-              <div className="flex items-center justify-between">
-                <div className="font-bold text-[13.5px]">{h.hu}</div>
-                <Badge tone={h.st}>{h.st === "done" ? "Đã cất" : h.st === "warn" ? "Override" : "Chờ"}</Badge>
-              </div>
-              <div className="text-[12px] text-slate-500">{h.sku} · {h.qty} cái</div>
-              <div className="mt-1.5 grid grid-cols-2 gap-2 text-[12px]">
-                <div className="bg-indigo-50 border border-indigo-200 rounded-lg px-2 py-1.5">
-                  <div className="text-[10px] text-indigo-600 font-semibold">AI gợi ý</div>
-                  <div className="font-bold text-indigo-900">{h.ai}</div>
-                </div>
-                <div className={`rounded-lg px-2 py-1.5 border ${h.override ? "bg-orange-50 border-orange-200" : "bg-emerald-50 border-emerald-200"}`}>
-                  <div className={`text-[10px] font-semibold ${h.override ? "text-orange-700" : "text-emerald-700"}`}>Thực tế</div>
-                  <div className={`font-bold ${h.override ? "text-orange-800" : "text-emerald-800"}`}>{h.real}</div>
-                </div>
-              </div>
-              {h.override && <div className="mt-1.5 text-[11px] text-orange-700 flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> Override · lý do: bin G04-B03 đầy</div>}
-            </div>
-          ))}
-        </Card>
-      </div>
-      <BottomActionBar
-        primary={{ label: "Hoàn thành Putaway", icon: CheckCircle2, onClick: back }}
+    <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <TopBar
+        brand
+        title="Putaway · Cất hàng"
+        sub="16 HU · Khu G"
+        onBack={back}
+        right={
+          <button
+            onClick={() => setShowExtendModal(true)}
+            className="flex items-center gap-1 px-3 h-8 rounded-full bg-slate-100 text-slate-700 text-[12px] font-medium hover:bg-slate-200"
+          >
+            <Clock className="w-3.5 h-3.5" />
+            Gia hạn KPI
+          </button>
+        }
       />
+
+      {/* Items List */}
+      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-28 space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {items.map((it, idx) => (
+          <Card key={it.hu} className="p-4">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div className="min-w-0 flex-1">
+                <div className="font-bold text-slate-900 text-[15px]">{it.hu}</div>
+                <div className="text-[12px] text-slate-600 mt-0.5">{it.name}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-[11.5px] text-slate-600">
+              <div>
+                <div className="text-slate-500 mb-1">Loại thùng</div>
+                <div className="h-9 px-2 rounded-lg border border-slate-200 text-[12px] bg-slate-50 flex items-center text-slate-700">
+                  {it.boxType}
+                </div>
+              </div>
+              <div>
+                <div className="text-slate-500 mb-1">Mã RFID</div>
+                <div className="h-9 px-2 rounded-lg border border-slate-200 text-[12px] bg-slate-50 flex items-center text-slate-700">
+                  {it.rfid}
+                </div>
+              </div>
+              <div className="col-span-2">
+                <div className="text-slate-500 mb-1">Vị trí lưu trữ</div>
+                <div className="flex items-center gap-1">
+                  <select
+                    value={it.location}
+                    className="flex-1 h-9 px-2 rounded-lg border border-slate-200 text-[12px]"
+                  >
+                    {it.locationList.map((loc) => (
+                      <option key={loc} value={loc}>{loc}</option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => refreshLocation(idx)}
+                    className="h-9 w-9 rounded-lg border border-slate-200 bg-white flex items-center justify-center"
+                  >
+                    <RefreshCw className="w-4 h-4 text-slate-500" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Bottom Action */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-4">
+        <Btn full icon={CheckCircle2}>
+          Hoàn thành
+        </Btn>
+      </div>
+
+      {/* Extend Modal */}
+      {showExtendModal && (
+        <div className="absolute inset-0 z-50 bg-black/40 flex items-end" onClick={() => setShowExtendModal(false)}>
+          <div className="w-full bg-white rounded-t-2xl p-4 pb-6 space-y-3" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <div className="font-semibold text-slate-900">Gia hạn KPI</div>
+              <button onClick={() => setShowExtendModal(false)} className="text-slate-400"><XCircle className="w-5 h-5" /></button>
+            </div>
+            <div>
+              <div className="text-xs text-slate-500 mb-1">Thời gian gia hạn (phút)</div>
+              <input type="number" min={5} step={5} value={extendMins} onChange={(e) => setExtendMins(+e.target.value)} className="w-full h-10 px-3 rounded-lg border border-slate-300 text-sm" />
+            </div>
+            <div>
+              <div className="text-xs text-slate-500 mb-1">Lý do (bắt buộc)</div>
+              <textarea value={extendReason} onChange={(e) => setExtendReason(e.target.value)} className="w-full h-20 p-2 rounded-lg border border-slate-300 text-sm" placeholder="Nhập lý do gia hạn..." />
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <Btn variant="outline" size="sm" full onClick={() => setShowExtendModal(false)}>Hủy</Btn>
+              <Btn size="sm" full icon={Clock} onClick={handleExtend}>Gia hạn</Btn>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
