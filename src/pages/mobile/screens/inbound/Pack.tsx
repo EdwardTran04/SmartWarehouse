@@ -152,17 +152,17 @@ export function ScreenPack({ back, goHome }: { back: () => void; goHome: () => v
               </div>
               <div>
                 <div className="text-slate-500 mb-1">Mã RFID</div>
-                <div className="flex items-center gap-1">
+                <div className="relative">
                   <input
                     value={it.rfid}
                     readOnly
-                    className="flex-1 h-9 px-2 rounded-lg border border-slate-200 text-[12px] bg-slate-50"
+                    className="w-full h-9 pl-2 pr-8 rounded-lg border border-slate-200 text-[12px] bg-slate-50"
                   />
                   <button
                     onClick={() => updateRfid(idx)}
-                    className="h-9 w-9 rounded-lg border border-slate-200 bg-white flex items-center justify-center"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center hover:bg-slate-100 rounded"
                   >
-                    <ScanLine className="w-4 h-4 text-slate-500" />
+                    <ScanLine className="w-3.5 h-3.5 text-slate-500" />
                   </button>
                 </div>
               </div>
