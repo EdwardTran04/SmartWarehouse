@@ -4,58 +4,60 @@ import { Badge, Card } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
 /* =============================================================
-   INBOUND ORDER LIST SCREEN: Danh sách lệnh nhập
+   OUTBOUND ORDER LIST SCREEN: Danh sách lệnh xuất
    Lũy kế tháng/năm trên 1 dòng + Số lượng trong ngày ở filter buttons
 ================================================================ */
-type InboundOrder = {
+type OutboundOrder = {
   id: string;
   orderCode: string;
-  supplier: string;
+  customer: string;
   warehouse: string;
-  status: "chờ_duyệt" | "đang_xử_lý" | "hoàn_tất";
+  status: "chờ_xác_nhận" | "đang_xử_lý" | "hoàn_tất" | "đã_hủy";
   eta: string;
   weight: string;
   volume: string;
+  route: string;
 };
 
-const ORDERS: InboundOrder[] = [
-  { id: "INB-2026-00231", orderCode: "INB-2026-00231", supplier: "Ericsson Vietnam", warehouse: "HN01", status: "chờ_duyệt", eta: "09:30", weight: "1,240 kg", volume: "4.8 m³" },
-  { id: "INB-2026-00228", orderCode: "INB-2026-00228", supplier: "Samsung Electronics", warehouse: "HN01", status: "đang_xử_lý", eta: "08:00", weight: "960 kg", volume: "3.2 m³" },
-  { id: "INB-2026-00225", orderCode: "INB-2026-00225", supplier: "Apple Vietnam", warehouse: "HN01", status: "hoàn_tất", eta: "07:30", weight: "720 kg", volume: "2.4 m³" },
-  { id: "INB-2026-00220", orderCode: "INB-2026-00220", supplier: "Xiaomi Vietnam", warehouse: "HN01", status: "đang_xử_lý", eta: "10:00", weight: "1,850 kg", volume: "6.2 m³" },
+const ORDERS: OutboundOrder[] = [
+  { id: "OUT-2026-00452", orderCode: "OUT-2026-00452", customer: "CH Viettel Hà Đông", warehouse: "HN01", status: "chờ_xác_nhận", eta: "15:00", weight: "184 kg", volume: "1.2 m³", route: "HN → Hà Đông" },
+  { id: "OUT-2026-00449", orderCode: "OUT-2026-00449", customer: "CH Viettel Cầu Giấy", warehouse: "HN01", status: "đang_xử_lý", eta: "14:00", weight: "220 kg", volume: "1.5 m³", route: "HN → Cầu Giấy" },
+  { id: "OUT-2026-00445", orderCode: "OUT-2026-00445", customer: "CH Viettel Thanh Xuân", warehouse: "HN01", status: "hoàn_tất", eta: "10:00", weight: "150 kg", volume: "1.0 m³", route: "HN → Thanh Xuân" },
+  { id: "OUT-2026-00440", orderCode: "OUT-2026-00440", customer: "CH Viettel Long Biên", warehouse: "HN01", status: "đang_xử_lý", eta: "16:30", weight: "310 kg", volume: "2.0 m³", route: "HN → Long Biên" },
 ];
 
 const statusConfig = {
-  chờ_duyệt: { label: "Chờ duyệt", tone: "warn" as const },
+  chờ_xác_nhận: { label: "Chờ xác nhận", tone: "warn" as const },
   đang_xử_lý: { label: "Đang xử lý", tone: "info" as const },
   hoàn_tất: { label: "Hoàn tất", tone: "done" as const },
+  đã_hủy: { label: "Đã hủy", tone: "err" as const },
 };
 
-const TABS = ["all", "chờ_duyệt", "đang_xử_lý", "hoàn_tất"] as const;
+const TABS = ["all", "chờ_xác_nhận", "đang_xử_lý", "hoàn_tất"] as const;
 type TabType = typeof TABS[number];
 
 const LABELS: Record<TabType, string> = {
   all: "Tất cả",
-  chờ_duyệt: "Chờ duyệt",
+  chờ_xác_nhận: "Chờ xác nhận",
   đang_xử_lý: "Đang xử lý",
   hoàn_tất: "Hoàn tất",
 };
 
-export function ScreenInboundOrderList({ back, goReceive }: { back: () => void; goReceive: () => void }) {
+export function ScreenOutboundOrderList({ back, goOutConfirm }: { back: () => void; goOutConfirm: () => void }) {
   const [tab, setTab] = useState<TabType>("all");
   const filtered = tab === "all" ? ORDERS : ORDERS.filter((o) => o.status === tab);
 
-  const doneMonth = 138;
-  const totalMonth = 142;
-  const doneYear = 1802;
-  const totalYear = 1847;
+  const doneMonth = 95;
+  const totalMonth = 98;
+  const doneYear = 1168;
+  const totalYear = 1205;
 
   const countOf = (status: TabType) =>
     status === "all" ? ORDERS.length : ORDERS.filter((o) => o.status === status).length;
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50">
-      <TopBar brand title="Danh sách lệnh nhập" sub="Kho HN01" onBack={back} />
+      <TopBar brand title="Danh sách lệnh xuất" sub="Kho HN01" onBack={back} />
 
       <div className="px-4 mt-3 space-y-2">
         <Card className="p-3">
@@ -102,7 +104,7 @@ export function ScreenInboundOrderList({ back, goReceive }: { back: () => void; 
             <Card
               key={order.id}
               className="p-4 cursor-pointer active:bg-slate-100 transition-colors"
-              onClick={() => goReceive()}
+              onClick={() => goOutConfirm()}
             >
               <div className="flex items-start justify-between gap-2 mb-3">
                 <div className="min-w-0">
@@ -111,7 +113,7 @@ export function ScreenInboundOrderList({ back, goReceive }: { back: () => void; 
                     <Badge tone={cfg.tone}>{cfg.label}</Badge>
                   </div>
                   <div className="text-[12px] text-slate-500 mt-0.5 flex items-center gap-1.5">
-                    <Truck className="w-3.5 h-3.5" /> {order.supplier}
+                    <Truck className="w-3.5 h-3.5" /> {order.customer}
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-slate-400 shrink-0" />
@@ -130,6 +132,7 @@ export function ScreenInboundOrderList({ back, goReceive }: { back: () => void; 
                   Giờ giao: <span className="font-semibold text-slate-800">{order.eta}</span>
                 </div>
               </div>
+              
             </Card>
           );
         })}

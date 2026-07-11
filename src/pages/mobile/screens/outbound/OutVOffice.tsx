@@ -4,8 +4,8 @@ import { Btn, Card, Row } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
 /* =============================================================
-   SCREEN: N7. VOFFICE - Ký VOffice
-   Có chọn mẫu chân ký từ dropdown (nhiều mẫu)
+   OUTBOUND SCREEN: X9. OutVOffice - Ký VOffice xuất
+   Design giống inbound VOffice (N7) - có chọn mẫu chân ký từ dropdown
 ================================================================ */
 type Signatory = {
   id: string;
@@ -50,7 +50,7 @@ const SIGNATURE_TEMPLATES: SignatureTemplate[] = [
   },
 ];
 
-export function ScreenVOffice({ back, goHome }: { back: () => void; goHome: () => void }) {
+export function ScreenOutVOffice({ back }: { back: () => void }) {
   const [showExtendModal, setShowExtendModal] = useState(false);
   const [extendMins, setExtendMins] = useState(30);
   const [extendReason, setExtendReason] = useState("");
@@ -63,15 +63,15 @@ export function ScreenVOffice({ back, goHome }: { back: () => void; goHome: () =
   };
 
   const handleSign = () => {
-    goHome();
+    back();
   };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <TopBar
         brand
-        title="Ký VOffice"
-        sub="Phiếu nhập GR-2026/05/14-018"
+        title="Ký VOffice xuất"
+        sub="Phiếu xuất GX-2026/05/14-052"
         onBack={back}
         right={
           <button
@@ -87,18 +87,18 @@ export function ScreenVOffice({ back, goHome }: { back: () => void; goHome: () =
         <Card className="p-4">
           <div className="aspect-[3/4] rounded-xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400">
             <FileCheck2 className="w-10 h-10 mb-2" />
-            <div className="text-[12px] font-semibold">Preview Phiếu nhập kho</div>
-            <div className="text-[11px] mt-1">GR-2026/05/14-018 · 2 trang</div>
+            <div className="text-[12px] font-semibold">Preview Phiếu xuất kho</div>
+            <div className="text-[11px] mt-1">GX-2026/05/14-052 · 2 trang</div>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-3">
-            <button className="h-10 rounded-lg border border-slate-200 text-[12.5px] font-semibold">Xem phiếu nhập</button>
+            <button className="h-10 rounded-lg border border-slate-200 text-[12.5px] font-semibold">Xem phiếu xuất</button>
             <button className="h-10 rounded-lg border border-slate-200 text-[12.5px] font-semibold">Xem BBBG</button>
           </div>
         </Card>
 
         <Card className="p-4 space-y-1.5 text-[13px]">
-          <Row k="Số phiếu nhập" v="GR-2026/05/14-018" />
-          <Row k="Người trình" v="Trần Văn Kho" />
+          <Row k="Số phiếu xuất" v="GX-2026/05/14-052" />
+          <Row k="Người trình" v="Nguyễn Văn Kho" />
           <Row k="Trạng thái" v={<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-semibold bg-orange-100 text-orange-700 border-orange-200">Chờ ký</span>} />
         </Card>
 

@@ -5,9 +5,10 @@ import {
   screens,
   ScreenLogin,
   ScreenHome,
-  ScreenTask,
+  ScreenHomeTask,
   ScreenReceive,
   ScreenVehicle,
+  ScreenVehicleConfirm,
   ScreenUnload,
   ScreenCheck,
   ScreenBBBG,
@@ -17,12 +18,15 @@ import {
   ScreenPutaway,
   ScreenApprove,
   ScreenInboundOrderList,
+  ScreenOutboundOrderList,
   ScreenOutConfirm,
   ScreenOutPick,
   ScreenOutKcs,
   ScreenOutPack,
   ScreenOutLoad,
-  ScreenOutHandover,
+  ScreenOutWaitArea,
+  ScreenOutBBBG,
+  ScreenOutVOffice,
   ScreenWorker,
   ScreenNotify,
   ScreenScan,
@@ -56,24 +60,25 @@ export default function MobileApp() {
   };
 
   const showBottomNav = useMemo(
-    () => !["login", "scan"].includes(screen) && !["receive", "vehicle", "unload", "check", "bbbg", "tagr", "voffice", "pack", "putaway", "task", "worker", "approve", "inboundOrderList", "outConfirm", "outPick", "outKcs", "outPack", "outLoad", "outHandover"].includes(screen),
+    () => !["login", "scan"].includes(screen) && !["receive", "vehicle", "vehicleConfirm", "unload", "check", "bbbg", "tagr", "voffice", "pack", "putaway", "worker", "approve", "inboundOrderList", "outboundOrderList", "outConfirm", "outPick", "outPack", "outWaitArea", "outKcs", "outBBBG", "outLoad", "outVOffice"].includes(screen),
     [screen]
   );
 
   const render = () => {
     switch (screen) {
       case "login": return <ScreenLogin go={go} />;
-      case "home": return <ScreenHome go={go} openTask={() => go("task")} />;
-      case "task": return <ScreenTask back={back} go={go} />;
+      case "home": return <ScreenHome go={go} />;
+      case "task": return <ScreenHomeTask go={go} />;
       case "receive": return <ScreenReceive back={back} />;
       case "vehicle": return <ScreenVehicle back={back} goScan={(vehicleId) => { setSelectedVehicleId(vehicleId); go("scan"); }} />;
-      case "unload": return <ScreenUnload back={back} goHome={() => navTo("home")} />;
-      case "check": return <ScreenCheck back={back} goHome={() => navTo("home")} />;
+      case "vehicleConfirm": return <ScreenVehicleConfirm back={back} go={go} />;
+      case "unload": return <ScreenUnload back={back} goHome={() => navTo("task")} />;
+      case "check": return <ScreenCheck back={back} goHome={() => navTo("task")} />;
       case "bbbg": return <ScreenBBBG back={back} done={back} />;
       case "tagr": return <ScreenTAGR back={back} goVOffice={() => navTo("voffice")} />;
-      case "voffice": return <ScreenVOffice back={back} goHome={() => navTo("home")} />;
-      case "pack": return <ScreenPack back={back} goHome={() => navTo("home")} />;
-      case "putaway": return <ScreenPutaway back={back} goHome={() => navTo("home")} />;
+      case "voffice": return <ScreenVOffice back={back} goHome={() => navTo("task")} />;
+      case "pack": return <ScreenPack back={back} goHome={() => navTo("task")} />;
+      case "putaway": return <ScreenPutaway back={back} goHome={() => navTo("task")} />;
       case "approve": return <ScreenApprove back={back} />;
       case "inboundOrderList": return <ScreenInboundOrderList back={back} goReceive={() => go("receive")} />;
       case "worker": return <ScreenWorker back={back} />;
@@ -81,12 +86,15 @@ export default function MobileApp() {
       case "scan": return <ScreenScan back={back} />;
       case "profile": return <ScreenProfile back={back} go={go} />;
       case "staffProfile": return <ScreenStaffProfile back={back} />;
+      case "outboundOrderList": return <ScreenOutboundOrderList back={back} goOutConfirm={() => go("outConfirm")} />;
       case "outConfirm": return <ScreenOutConfirm back={back} />;
       case "outPick": return <ScreenOutPick back={back} />;
-      case "outKcs": return <ScreenOutKcs back={back} />;
       case "outPack": return <ScreenOutPack back={back} />;
+      case "outWaitArea": return <ScreenOutWaitArea back={back} />;
+      case "outKcs": return <ScreenOutKcs back={back} />;
+      case "outBBBG": return <ScreenOutBBBG back={back} />;
       case "outLoad": return <ScreenOutLoad back={back} />;
-      case "outHandover": return <ScreenOutHandover back={back} />;
+      case "outVOffice": return <ScreenOutVOffice back={back} />;
     }
   };
 
