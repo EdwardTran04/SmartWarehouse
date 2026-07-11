@@ -6,6 +6,7 @@ import {
   ScreenLogin,
   ScreenHome,
   ScreenHomeTask,
+  ScreenHrDashboard,
   ScreenReceive,
   ScreenVehicle,
   ScreenVehicleConfirm,
@@ -60,7 +61,7 @@ export default function MobileApp() {
   };
 
   const showBottomNav = useMemo(
-    () => !["login", "scan"].includes(screen) && !["receive", "vehicle", "vehicleConfirm", "unload", "check", "bbbg", "tagr", "voffice", "pack", "putaway", "worker", "approve", "inboundOrderList", "outboundOrderList", "outConfirm", "outPick", "outPack", "outWaitArea", "outKcs", "outBBBG", "outLoad", "outVOffice"].includes(screen),
+    () => !["login", "scan"].includes(screen) && !["receive", "vehicle", "vehicleConfirm", "hrDashboard", "unload", "check", "bbbg", "tagr", "voffice", "pack", "putaway", "worker", "approve", "inboundOrderList", "outboundOrderList", "outConfirm", "outPick", "outPack", "outWaitArea", "outKcs", "outBBBG", "outLoad", "outVOffice"].includes(screen),
     [screen]
   );
 
@@ -69,6 +70,7 @@ export default function MobileApp() {
       case "login": return <ScreenLogin go={go} />;
       case "home": return <ScreenHome go={go} />;
       case "task": return <ScreenHomeTask go={go} />;
+      case "hrDashboard": return <ScreenHrDashboard back={back} go={go} />;
       case "receive": return <ScreenReceive back={back} />;
       case "vehicle": return <ScreenVehicle back={back} goScan={(vehicleId) => { setSelectedVehicleId(vehicleId); go("scan"); }} />;
       case "vehicleConfirm": return <ScreenVehicleConfirm back={back} go={go} />;

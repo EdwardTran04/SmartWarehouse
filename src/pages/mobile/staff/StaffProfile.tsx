@@ -89,8 +89,8 @@ export function ScreenStaffProfile({ back }: { back?: () => void }) {
           <div className="text-[11px] uppercase tracking-wider font-semibold text-slate-500 mb-3">Đánh giá hiệu suất</div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[12px] text-slate-600">Task hoàn thành đúng hạn</span>
-              <span className="text-[12px] font-bold text-emerald-600">98%</span>
+              <span className="text-[12px] text-slate-600">Task hoàn thành/tổng task</span>
+              <span className="text-[12px] font-bold text-emerald-600">8/10</span>
             </div>
             <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
               <div className="h-full bg-emerald-500 rounded-full" style={{ width: "98%" }} />

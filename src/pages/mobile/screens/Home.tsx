@@ -11,7 +11,7 @@ type Screen =
   | "outboundOrderList" | "outConfirm" | "outPick" | "outPack" | "outWaitArea" | "outKcs" | "outBBBG" | "outLoad" | "outVOffice"
   | "approve"
   | "inboundOrderList"
-  | "worker" | "notify" | "scan" | "profile" | "staffProfile";
+  | "worker" | "notify" | "scan" | "profile" | "hrDashboard";
 
 export function ScreenHome({ go }: { go: (s: Screen) => void }) {
   const menuItems = [
@@ -33,19 +33,19 @@ export function ScreenHome({ go }: { go: (s: Screen) => void }) {
     },
     {
       id: "vehicle",
-      label: "Đặt xe",
+      label: "Duyệt xe",
       icon: Truck,
       color: "bg-amber-50 text-amber-600 border-amber-100",
-      action: () => {},
-      disabled: true,
+      action: () => go("vehicleConfirm"),
+      disabled: false,
     },
     {
       id: "dashboard",
       label: "Dashboard",
       icon: LayoutDashboard,
       color: "bg-emerald-50 text-emerald-600 border-emerald-100",
-      action: () => {},
-      disabled: true,
+      action: () => go("hrDashboard"),
+      disabled: false,
     },
   ];
 
