@@ -18,34 +18,59 @@ export function ScreenReceive({ back }: { back: () => void }) {
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
       <TopBar brand title="Tiếp nhận lệnh nhập" sub="INB-2026-00122 · 14/05/2026" onBack={back} />
       <div className="flex-1 overflow-y-auto p-4 pb-32 space-y-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <Card className="p-4 space-y-2 text-[13px]">
-          <div className="flex items-center justify-between mb-1">
+        <Card className="p-3.5 space-y-2 text-[12.5px]">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-1.5">
             <div className="text-[15px] font-bold text-slate-900">INB-2026-00122</div>
             <Badge tone="info">Chờ tiếp nhận</Badge>
           </div>
-          <Row k="Loại nhập" v="Nhập từ NCC" />
-          <Row k="NCC / Đơn vị giao" v="Ericsson Vietnam · NCC-0991" />
-          <Row k="Kho nhận" v="HN01 · Kho HN" />
-          <Row k="Ngày dự kiến" v="14/05/2026 · 09:00" />
-          <Row k="SLA" v="2 giờ" />
-          <Row k="Số dòng hàng" v="12 dòng" />
-          <Row k="Tổng SL" v="3.840 cái" />
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+            <div>
+              <div className="text-slate-400 text-[11px]">Loại nhập</div>
+              <div className="font-semibold text-slate-700">Nhập từ NCC</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-[11px]">Đơn vị giao</div>
+              <div className="font-semibold text-slate-700 truncate">Ericsson Vietnam</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-[11px]">Kho nhận</div>
+              <div className="font-semibold text-slate-700">HN01 · Kho HN</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-[11px]">Dự kiến</div>
+              <div className="font-semibold text-slate-700">14/05/2026 · 09:00</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-[11px]">Trọng lượng / Thể tích</div>
+              <div className="font-semibold text-slate-700">1,240 kg · 4.8 m³</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-[11px]">Tổng SL / Dòng hàng</div>
+              <div className="font-semibold text-slate-700">3.840 cái · 12 dòng</div>
+            </div>
+          </div>
         </Card>
 
-        <SectionTitle title="Hàng tóm tắt" icon={Package} />
+        <SectionTitle title="Danh sách hàng hóa" icon={Package} />
         <Card>
           {[
-            ["SP-A001", "Galaxy A15 128GB", 800],
-            ["SP-A002", "Galaxy A25 256GB", 600],
-            ["SP-A003", "Tai nghe Buds Pro", 1200],
-            ["SP-A004", "Củ sạc 25W", 1240],
-          ].map(([sku, name, qty]: any) => (
-            <div key={sku} className="flex items-center justify-between p-3 border-b border-slate-100 last:border-0 text-[13px]">
+            { sku: "SP-A001", name: "Galaxy A15 128GB", qty: 800, weight: "240 kg", volume: "0.9 m³" },
+            { sku: "SP-A002", name: "Galaxy A25 256GB", qty: 600, weight: "210 kg", volume: "0.8 m³" },
+            { sku: "SP-A003", name: "Tai nghe Buds Pro", qty: 1200, weight: "40 kg", volume: "0.2 m³" },
+            { sku: "SP-A004", name: "Củ sạc 25W", qty: 1240, weight: "750 kg", volume: "2.9 m³" },
+          ].map((item) => (
+            <div key={item.sku} className="flex items-center justify-between p-3 border-b border-slate-100 last:border-0 text-[13px]">
               <div>
-                <div className="font-semibold text-slate-900">{sku}</div>
-                <div className="text-slate-500 text-[12px]">{name}</div>
+                <div className="font-semibold text-slate-900">{item.sku}</div>
+                <div className="text-slate-500 text-[12px]">{item.name}</div>
+                <div className="text-slate-400 text-[11px] mt-0.5">
+                  Khối lượng: {item.weight} · Thể tích: {item.volume}
+                </div>
               </div>
-              <div className="font-bold tabular-nums">{qty}</div>
+              <div className="text-right">
+                <div className="font-bold text-slate-800 text-[14px] tabular-nums">{item.qty.toLocaleString()}</div>
+                <div className="text-slate-400 text-[10px]">Cái</div>
+              </div>
             </div>
           ))}
         </Card>

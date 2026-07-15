@@ -23,6 +23,7 @@ type OrderInfo = {
   destination: string;
   volume: string;
   weight: string;
+  timeFromOrigin?: string;
 };
 
 type RouteInfo = {
@@ -30,15 +31,16 @@ type RouteInfo = {
   routeName: string;
   vehicleType: string;
   eta: string;
+  partner?: string;
   orders: OrderInfo[];
 };
 
 const AVAILABLE_ORDERS: OrderInfo[] = [
-  { id: "ORD-0997", destination: "Kho Văn Giang (Hưng Yên)", volume: "60 thùng", weight: "720 kg" },
-  { id: "ORD-0998", destination: "Kho Nam Sách (Hải Dương)", volume: "110 thùng", weight: "1,320 kg" },
-  { id: "ORD-0999", destination: "Kho Kim Thanh (Hải Dương)", volume: "75 thùng", weight: "900 kg" },
-  { id: "ORD-1000", destination: "Kho Thanh Liêm (Hà Nam)", volume: "95 thùng", weight: "1,140 kg" },
-  { id: "ORD-1001", destination: "Kho Ý Yên (Nam Định)", volume: "130 thùng", weight: "1,560 kg" },
+  { id: "ORD-0997", destination: "Kho Văn Giang (Hưng Yên)", volume: "60 thùng", weight: "720 kg", timeFromOrigin: "trong 1.2h" },
+  { id: "ORD-0998", destination: "Kho Nam Sách (Hải Dương)", volume: "110 thùng", weight: "1,320 kg", timeFromOrigin: "trong 2.8h" },
+  { id: "ORD-0999", destination: "Kho Kim Thanh (Hải Dương)", volume: "75 thùng", weight: "900 kg", timeFromOrigin: "trong 3.2h" },
+  { id: "ORD-1000", destination: "Kho Thanh Liêm (Hà Nam)", volume: "95 thùng", weight: "1,140 kg", timeFromOrigin: "trong 2.5h" },
+  { id: "ORD-1001", destination: "Kho Ý Yên (Nam Định)", volume: "130 thùng", weight: "1,560 kg", timeFromOrigin: "trong 4h" },
 ];
 
 const VEHICLE_TYPES = [
@@ -56,9 +58,10 @@ const INITIAL_ROUTES: RouteInfo[] = [
     routeName: "Tuyến 1: HN - Bắc Ninh - Bắc Giang",
     vehicleType: "Container 20 feet",
     eta: "11:30 - 11/07/2026",
+    partner: "Viettel Post",
     orders: [
-      { id: "ORD-0991", destination: "Kho Yên Phong (Bắc Ninh)", volume: "150 thùng", weight: "1,800 kg" },
-      { id: "ORD-0992", destination: "Kho Song Khê (Bắc Giang)", volume: "90 thùng", weight: "1,100 kg" }
+      { id: "ORD-0991", destination: "Kho Yên Phong (Bắc Ninh)", volume: "150 thùng", weight: "1,800 kg", timeFromOrigin: "trong 2h" },
+      { id: "ORD-0992", destination: "Kho Song Khê (Bắc Giang)", volume: "90 thùng", weight: "1,100 kg", timeFromOrigin: "trong 4h" }
     ]
   },
   {
@@ -66,9 +69,10 @@ const INITIAL_ROUTES: RouteInfo[] = [
     routeName: "Tuyến 2: HN - Hưng Yên - Hải Dương",
     vehicleType: "Xe tải 5 tấn",
     eta: "14:00 - 11/07/2026",
+    partner: "DHL Vietnam",
     orders: [
-      { id: "ORD-0995", destination: "Kho Phố Nối (Hưng Yên)", volume: "80 thùng", weight: "950 kg" },
-      { id: "ORD-0996", destination: "Kho Đại An (Hải Dương)", volume: "120 thùng", weight: "1,450 kg" }
+      { id: "ORD-0995", destination: "Kho Phố Nối (Hưng Yên)", volume: "80 thùng", weight: "950 kg", timeFromOrigin: "trong 1.5h" },
+      { id: "ORD-0996", destination: "Kho Đại An (Hải Dương)", volume: "120 thùng", weight: "1,450 kg", timeFromOrigin: "trong 3h" }
     ]
   },
   {
@@ -76,9 +80,10 @@ const INITIAL_ROUTES: RouteInfo[] = [
     routeName: "Tuyến 3: HN - Hà Nam - Nam Định",
     vehicleType: "Container 40 feet",
     eta: "16:30 - 11/07/2026",
+    partner: "J&T Express",
     orders: [
-      { id: "ORD-1002", destination: "Kho Đồng Văn (Hà Nam)", volume: "240 thùng", weight: "2,900 kg" },
-      { id: "ORD-1003", destination: "Kho Mỹ Xá (Nam Định)", volume: "180 thùng", weight: "2,200 kg" }
+      { id: "ORD-1002", destination: "Kho Đồng Văn (Hà Nam)", volume: "240 thùng", weight: "2,900 kg", timeFromOrigin: "trong 2h" },
+      { id: "ORD-1003", destination: "Kho Mỹ Xá (Nam Định)", volume: "180 thùng", weight: "2,200 kg", timeFromOrigin: "trong 4.5h" }
     ]
   }
 ];
@@ -92,6 +97,7 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
   const [newRouteName, setNewRouteName] = useState("");
   const [newVehicleType, setNewVehicleType] = useState(VEHICLE_TYPES[0]);
   const [newEta, setNewEta] = useState("");
+  const [newPartner, setNewPartner] = useState("");
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   const [editingOrderIds, setEditingOrderIds] = useState<string[]>([]);
   const [deleteRouteId, setDeleteRouteId] = useState<string | null>(null);
@@ -161,12 +167,14 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
       routeName: newRouteName || "Tuyến mới",
       vehicleType: newVehicleType,
       eta: newEta || new Date().toLocaleString("vi-VN"),
+      partner: newPartner || "Viettel Post",
       orders: selectedOrders
     }]);
     setShowAddModal(false);
     setNewRouteName("");
     setNewVehicleType(VEHICLE_TYPES[0]);
     setNewEta("");
+    setNewPartner("");
     setSelectedOrderIds([]);
   };
 
@@ -175,6 +183,7 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
     setNewRouteName("");
     setNewVehicleType(VEHICLE_TYPES[0]);
     setNewEta("");
+    setNewPartner("");
     setSelectedOrderIds([]);
   };
 
@@ -191,7 +200,7 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
-      <TopBar brand title="Xác nhận xe" sub="Thông tin chung · Tuyến vận chuyển" onBack={back}
+      <TopBar brand title="Gom tuyến" sub="Thông tin chung · Tuyến vận chuyển" onBack={back}
         right={
           <button
             onClick={() => setShowAddModal(true)}
@@ -225,13 +234,18 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
                   {route.routeName}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500 font-medium">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-slate-500 font-medium">
                   <div className="flex items-center gap-1">
                     <Truck className="w-3.5 h-3.5 text-slate-400" /> {route.vehicleType}
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-slate-400" /> {route.eta}
                   </div>
+                  {route.partner && (
+                    <div className="flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-100/80 px-1.5 py-0.5 rounded text-[10px]">
+                      Đối tác: <span className="font-bold">{route.partner}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -259,13 +273,20 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
 
                 {route.orders.map((order) => (
                   <div key={order.id} className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 space-y-1.5">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-start gap-2">
                       <span className="text-[12.5px] font-bold text-slate-800 flex items-center gap-1">
                         <MapPin className="w-3.5 h-3.5 text-slate-400" /> {order.destination}
                       </span>
-                      <span className="text-[9px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-mono font-bold">
-                        {order.id}
-                      </span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {order.timeFromOrigin && (
+                          <span className="text-[10px] bg-blue-50 text-blue-600 border border-blue-100 px-1.5 py-0.5 rounded font-semibold whitespace-nowrap">
+                            ⏱ {order.timeFromOrigin}
+                          </span>
+                        )}
+                        <span className="text-[9px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-mono font-bold">
+                          {order.id}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-4 text-[11.5px] text-slate-500">
@@ -342,6 +363,16 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
                 onChange={(e) => setEditingRoute({ ...editingRoute, eta: e.target.value })}
                 className="w-full h-10 px-3 rounded-lg border border-slate-200 text-[14px]"
                 placeholder="VD: 11:30 - 11/07/2026"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-600 mb-1 block">Đối tác vận chuyển</label>
+              <input
+                type="text"
+                value={editingRoute.partner || ""}
+                onChange={(e) => setEditingRoute({ ...editingRoute, partner: e.target.value })}
+                className="w-full h-10 px-3 rounded-lg border border-slate-200 text-[14px]"
+                placeholder="VD: Viettel Post"
               />
             </div>
             <div>
@@ -458,6 +489,16 @@ export function ScreenVehicleConfirm({ back, go }: { back: () => void; go: (s: S
                 onChange={(e) => setNewEta(e.target.value)}
                 className="w-full h-10 px-3 rounded-lg border border-slate-200 text-[14px]"
                 placeholder="VD: 18:00 - 11/07/2026"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-600 mb-1 block">Đối tác vận chuyển</label>
+              <input
+                type="text"
+                value={newPartner}
+                onChange={(e) => setNewPartner(e.target.value)}
+                className="w-full h-10 px-3 rounded-lg border border-slate-200 text-[14px]"
+                placeholder="VD: Viettel Post"
               />
             </div>
             <div>

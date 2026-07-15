@@ -4,20 +4,20 @@
 
 export type Screen =
   | "login" | "home" | "task" | "hrDashboard" | "receive" | "vehicle" | "vehicleConfirm" | "unload" | "check" | "bbbg"
-  | "tagr" | "voffice" | "pack" | "putaway"
+  | "tagr" | "voffice" | "pack" | "inboundWaitArea" | "putaway"
   | "outboundOrderList" | "outConfirm" | "outPick" | "outPack" | "outWaitArea" | "outKcs" | "outBBBG" | "outLoad" | "outVOffice"
   | "approve"
   | "inboundOrderList"
-  | "worker" | "notify" | "scan" | "profile" | "staffProfile";
+  | "worker" | "notify" | "scan" | "profile" | "scheduleRegister" | "partnerVehicle";
 
 export const screens: { id: Screen; label: string; group: string }[] = [
   { id: "login", label: "1. Login / Chọn kho", group: "Phần 1 · Khởi đầu" },
   { id: "home", label: "2. Trang chủ", group: "Phần 1 · Khởi đầu" },
-  { id: "task", label: "3. Danh sách task", group: "Phần 1 · Khởi đầu" },
-  { id: "hrDashboard", label: "3. Kết quả nhân sự", group: "Phần 2 · Thông tin chung" },
-  { id: "approve", label: "4. Phê duyệt phân công", group: "Phần 2 · Thông tin chung" },
-  { id: "vehicle", label: "5. Giám sát an ninh", group: "Phần 2 · Thông tin chung" },
-  { id: "vehicleConfirm", label: "6. Xác nhận xe", group: "Phần 2 · Thông tin chung" },
+  { id: "hrDashboard", label: "3. Dashboard nhân sự", group: "Phần 2 · Thông tin chung" },
+  { id: "task", label: "4. Danh sách task", group: "Phần 2 · Thông tin chung" },
+  { id: "approve", label: "5. Phê duyệt phân công", group: "Phần 2 · Thông tin chung" },
+  { id: "vehicle", label: "6. Giám sát an ninh", group: "Phần 2 · Thông tin chung" },
+  { id: "vehicleConfirm", label: "7. Gom tuyến", group: "Phần 2 · Thông tin chung" },
   { id: "inboundOrderList", label: "N1 · DS lệnh nhập", group: "Phần 3 · Luồng nhập" },
   { id: "receive", label: "N2 · Xác nhận lệnh nhập", group: "Phần 3 · Luồng nhập" },
   { id: "unload", label: "N3 · Dỡ hàng", group: "Phần 3 · Luồng nhập" },
@@ -26,6 +26,7 @@ export const screens: { id: Screen; label: string; group: string }[] = [
   { id: "tagr", label: "N6 · Thực nhập", group: "Phần 3 · Luồng nhập" },
   { id: "voffice", label: "N7 · Ký VOffice", group: "Phần 3 · Luồng nhập" },
   { id: "pack", label: "N8 · Đóng gói / In tem", group: "Phần 3 · Luồng nhập" },
+  { id: "inboundWaitArea", label: "N8.5 · Khu chờ nhập", group: "Phần 3 · Luồng nhập" },
   { id: "putaway", label: "N9 · Putaway", group: "Phần 3 · Luồng nhập" },
   { id: "outboundOrderList", label: "X1 · DS lệnh xuất", group: "Phần 4 · Luồng xuất" },
   { id: "outConfirm", label: "X2 · Xác nhận lệnh xuất", group: "Phần 4 · Luồng xuất" },
@@ -40,7 +41,8 @@ export const screens: { id: Screen; label: string; group: string }[] = [
   { id: "notify", label: "+ Notification Center", group: "Hệ thống" },
   { id: "scan", label: "+ Scan", group: "Hệ thống" },
   { id: "profile", label: "+ Cá nhân", group: "Hệ thống" },
-  { id: "staffProfile", label: "+ Hồ sơ nhân viên", group: "Hệ thống" },
+  { id: "scheduleRegister", label: "+ Đăng ký lịch", group: "Hệ thống" },
+  { id: "partnerVehicle", label: "+ Đối tác duyệt lịch", group: "Hệ thống" },
 ];
 
 // Screen components
@@ -56,6 +58,7 @@ export { ScreenBBBG } from "./inbound/BBBG";
 export { ScreenTAGR } from "./inbound/TAGR";
 export { ScreenVOffice } from "./inbound/VOffice";
 export { ScreenPack } from "./inbound/Pack";
+export { ScreenInboundWaitArea } from "./inbound/InboundWaitArea";
 export { ScreenPutaway } from "./inbound/Putaway";
 export { ScreenApprove } from "./approve/Approve";
 export { ScreenInboundOrderList } from "./inbound/InboundOrderList";
@@ -72,5 +75,6 @@ export { ScreenWorker } from "./system/Worker";
 export { ScreenNotify } from "./system/Notify";
 export { ScreenScan } from "./system/Scan";
 export { ScreenProfile } from "./system/Profile";
+export { ScreenScheduleRegister } from "./system/ScheduleRegister";
+export { ScreenPartnerVehicle } from "./inbound/PartnerVehicle";
 export { ScreenHrDashboard } from "./system/HrDashboard";
-export { ScreenStaffProfile } from "../staff/StaffProfile";

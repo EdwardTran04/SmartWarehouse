@@ -18,6 +18,8 @@ const TASKS = [
   { id: "T-SCR0000000001", type: "Xác nhận xe / cổng", order: "INB-2026-00118", loc: "Cổng bảo vệ", deadline: "09:45", left: "00:30:00", status: "doing" as const, statusLabel: "Đang xử lý", route: "vehicle" as const },
   { id: "T-Unl0000000001", type: "Dỡ hàng tại Dock A2", order: "INB-2026-00118", loc: "Dock A2", deadline: "10:30", left: "00:42:10", status: "doing" as const, statusLabel: "Đang xử lý", route: "unload" as const },
   { id: "T-Ho", type: "Kiểm hàng theo PO", order: "INB-2026-00118", loc: "Khu kiểm B1", deadline: "11:15", left: "01:27:00", status: "idle" as const, statusLabel: "Chưa bắt đầu", route: "check" as const },
+  { id: "T-SigBBBG00001", type: "Ký Biên bản bàn giao", order: "INB-2026-00118", loc: "Văn phòng", deadline: "11:45", left: "01:57:00", status: "idle" as const, statusLabel: "Chưa bắt đầu", route: "bbbg" as const },
+  { id: "T-Wait000000001", type: "Đưa hàng vào khu chờ nhập", order: "INB-2026-00118", loc: "Khu chờ nhập B", deadline: "12:00", left: "02:12:00", status: "idle" as const, statusLabel: "Chưa bắt đầu", route: "inboundWaitArea" as const },
   { id: "T-AGR0000000001", type: "Thực nhập T-AGR", order: "INB-2026-00118", loc: "Khu kiểm B1", deadline: "12:15", left: "02:27:00", status: "idle" as const, statusLabel: "Chưa bắt đầu", route: "tagr" as const },
   { id: "T-Sig0000000001", type: "Ký VOffice", order: "INB-2026-00118", loc: "Văn phòng", deadline: "12:45", left: "02:57:00", status: "idle" as const, statusLabel: "Chưa bắt đầu", route: "voffice" as const },
   { id: "T-Pac0000000001", type: "Đóng gói & In tem", order: "INB-2026-00118", loc: "Khu đóng gói", deadline: "13:15", left: "03:27:00", status: "idle" as const, statusLabel: "Chưa bắt đầu", route: "pack" as const },
@@ -27,6 +29,21 @@ const TASKS = [
 export function ScreenHomeTask({ go }: { go: (s: Screen) => void }) {
   const [filter, setFilter] = useState("Tất cả");
   const filters = ["Tất cả", "Chưa bắt đầu", "Đang xử lý", "Pending", "Quá hạn", "Hoàn thành"];
+
+  const getCount = (f: string) => {
+    if (f === "Tất cả") return TASKS.length;
+    if (f === "Chưa bắt đầu") return TASKS.filter(t => t.status === "idle").length;
+    if (f === "Đang xử lý") return TASKS.filter(t => t.status === "doing").length;
+    if (f === "Pending") return TASKS.filter(t => t.status === "warn").length;
+    if (f === "Quá hạn") return TASKS.filter(t => t.status === "err").length;
+    if (f === "Hoàn thành") return TASKS.filter(t => t.status === "done").length;
+    return 0;
+  };
+
+  const doneMonth = 154;
+  const totalMonth = 160;
+  const doneYear = 1920;
+  const totalYear = 2000;
 
   const filteredTasks = TASKS.filter((t) => {
     if (filter === "Tất cả") return true;
@@ -51,44 +68,32 @@ export function ScreenHomeTask({ go }: { go: (s: Screen) => void }) {
             <Bell className="w-5 h-5" />
           </div>
         </div>
-        <div className="grid grid-cols-5 gap-1 mt-3">
-          <div className="bg-white/15 rounded-lg p-2 text-center">
-            <div className="text-[16px] font-bold">{TASKS.length}</div>
-            <div className="text-[9px] opacity-80">Tổng task</div>
+        <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="bg-white/15 rounded-lg p-2.5">
+            <div className="text-[10px] opacity-80 mb-0.5">Lũy kế tháng</div>
+            <div className="text-[18px] font-bold text-white">
+              {doneMonth}
+            </div>
           </div>
-          <div className="bg-white/15 rounded-lg p-2 text-center">
-            <div className="text-[16px] font-bold">{TASKS.filter(t => t.status === "doing").length}</div>
-            <div className="text-[9px] opacity-80">Đang làm</div>
-          </div>
-          <div className="bg-white/15 rounded-lg p-2 text-center">
-            <div className="text-[16px] font-bold">{TASKS.filter(t => t.status === "idle").length}</div>
-            <div className="text-[9px] opacity-80">Chưa chạy</div>
-          </div>
-          <div className="bg-white/15 rounded-lg p-2 text-center">
-            <div className="text-[16px] font-bold">{TASKS.filter(t => t.status === "err").length}</div>
-            <div className="text-[9px] opacity-80">Quá hạn</div>
-          </div>
-          <div className="bg-white/15 rounded-lg p-2 text-center">
-            <div className="text-[16px] font-bold">{TASKS.filter(t => t.status === "warn").length}</div>
-            <div className="text-[9px] opacity-80">Cảnh báo</div>
+          <div className="bg-white/15 rounded-lg p-2.5">
+            <div className="text-[10px] opacity-80 mb-0.5">Lũy kế năm</div>
+            <div className="text-[18px] font-bold text-white">
+              {doneYear.toLocaleString()}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="px-3 py-2 flex gap-1.5 overflow-x-auto bg-white border-b border-slate-200 shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {filters.map((f) => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`shrink-0 h-8 px-3 rounded-full text-[12px] font-semibold border ${filter === f ? "bg-brand text-white border-brand" : "bg-white text-slate-600 border-slate-200"}`}>
-            {f}
-          </button>
-        ))}
-      </div>
-
-      {/* Quick action: Danh sách lệnh nhập */}
-      <div className="px-3 py-2 bg-white border-b border-slate-200 shrink-0">
-        <Btn variant="outline" full icon={ClipboardList} onClick={() => go("inboundOrderList")}>
-          Danh sách lệnh nhập
-        </Btn>
+        {filters.map((f) => {
+          const count = getCount(f);
+          return (
+            <button key={f} onClick={() => setFilter(f)}
+              className={`shrink-0 h-8 px-3 rounded-full text-[12px] font-semibold border whitespace-nowrap ${filter === f ? "bg-brand text-white border-brand" : "bg-white text-slate-600 border-slate-200"}`}>
+              {f} ({count})
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

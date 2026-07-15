@@ -16,6 +16,7 @@ import {
   ScreenTAGR,
   ScreenVOffice,
   ScreenPack,
+  ScreenInboundWaitArea,
   ScreenPutaway,
   ScreenApprove,
   ScreenInboundOrderList,
@@ -32,7 +33,8 @@ import {
   ScreenNotify,
   ScreenScan,
   ScreenProfile,
-  ScreenStaffProfile,
+  ScreenScheduleRegister,
+  ScreenPartnerVehicle,
 } from "./screens";
 import { PhoneFrame, BottomNav } from "./components/layout";
 
@@ -61,7 +63,7 @@ export default function MobileApp() {
   };
 
   const showBottomNav = useMemo(
-    () => !["login", "scan"].includes(screen) && !["receive", "vehicle", "vehicleConfirm", "hrDashboard", "unload", "check", "bbbg", "tagr", "voffice", "pack", "putaway", "worker", "approve", "inboundOrderList", "outboundOrderList", "outConfirm", "outPick", "outPack", "outWaitArea", "outKcs", "outBBBG", "outLoad", "outVOffice"].includes(screen),
+    () => !["login", "scan"].includes(screen) && !["receive", "vehicle", "vehicleConfirm", "hrDashboard", "unload", "check", "bbbg", "tagr", "voffice", "pack", "inboundWaitArea", "putaway", "worker", "approve", "inboundOrderList", "outboundOrderList", "outConfirm", "outPick", "outPack", "outWaitArea", "outKcs", "outBBBG", "outLoad", "outVOffice", "scheduleRegister", "partnerVehicle"].includes(screen),
     [screen]
   );
 
@@ -80,14 +82,16 @@ export default function MobileApp() {
       case "tagr": return <ScreenTAGR back={back} goVOffice={() => navTo("voffice")} />;
       case "voffice": return <ScreenVOffice back={back} goHome={() => navTo("task")} />;
       case "pack": return <ScreenPack back={back} goHome={() => navTo("task")} />;
+      case "inboundWaitArea": return <ScreenInboundWaitArea back={back} goHome={() => navTo("task")} />;
       case "putaway": return <ScreenPutaway back={back} goHome={() => navTo("task")} />;
       case "approve": return <ScreenApprove back={back} />;
       case "inboundOrderList": return <ScreenInboundOrderList back={back} goReceive={() => go("receive")} />;
       case "worker": return <ScreenWorker back={back} />;
       case "notify": return <ScreenNotify back={back} />;
       case "scan": return <ScreenScan back={back} />;
-      case "profile": return <ScreenProfile back={back} go={go} />;
-      case "staffProfile": return <ScreenStaffProfile back={back} />;
+      case "profile": return <ScreenProfile back={back} />;
+      case "scheduleRegister": return <ScreenScheduleRegister back={back} />;
+      case "partnerVehicle": return <ScreenPartnerVehicle back={back} />;
       case "outboundOrderList": return <ScreenOutboundOrderList back={back} goOutConfirm={() => go("outConfirm")} />;
       case "outConfirm": return <ScreenOutConfirm back={back} />;
       case "outPick": return <ScreenOutPick back={back} />;

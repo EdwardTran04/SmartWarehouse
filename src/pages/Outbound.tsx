@@ -116,7 +116,7 @@ export function OutboundDashboard() {
             <tbody>
               {outOrders.filter((o) => ["API Error", "Waiting Confirm", "GI API Error", "Sign Rejected", "Restorage Required", "Waiting VOffice"].includes(o.status)).slice(0, 6).map((o) => (
                 <tr key={o.id} className="border-b border-border/60">
-                  <td className="py-2"><Link to={`/outbound/orders/${o.id}`} className="text-brand font-medium hover:underline">{o.id}</Link></td>
+                  <td className="py-2"><Link to={`/outbound/orders/${o.id}/confirm`} className="text-brand font-medium hover:underline">{o.id}</Link></td>
                   <td className="py-2"><IBadge>{o.type}</IBadge></td>
                   <td className="py-2"><IBadge>{outboundStatusVi(o.status)}</IBadge></td>
                   <td className="py-2"><SLAPill pct={o.slaPct} label={o.sla} /></td>
@@ -317,7 +317,7 @@ export function OutboundOrders() {
                   <td className="px-3 py-2.5"><input type="checkbox" disabled={o.status !== "Waiting Confirm"} checked={sel.includes(o.id)} onChange={() => toggle(o.id)} className="disabled:opacity-40 disabled:cursor-not-allowed" /></td>
                   <td className="px-3 py-2.5">
                     <div className="flex items-center gap-1.5">
-                      <Link to={`/outbound/orders/${o.id}`} className="text-brand font-semibold hover:underline">{o.id}</Link>
+                      <Link to={`/outbound/orders/${o.id}/confirm`} className="text-brand font-semibold hover:underline">{o.id}</Link>
                       {(() => {
                         const trip = getTripForOutbound(o.id);
                         if (!trip && !o.hasTransport) return null;

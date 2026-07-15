@@ -1,4 +1,4 @@
-import { Bell, ClipboardList, ListChecks, Truck, LayoutDashboard } from "lucide-react";
+import { Bell, ClipboardList, ListChecks, Truck, LayoutDashboard, Calendar } from "lucide-react";
 import { Card } from "../components/ui";
 
 /* =============================================================
@@ -16,16 +16,24 @@ type Screen =
 export function ScreenHome({ go }: { go: (s: Screen) => void }) {
   const menuItems = [
     {
-      id: "orders",
-      label: "Danh sách lệnh",
+      id: "inboundOrders",
+      label: "Lệnh nhập",
       icon: ClipboardList,
       color: "bg-red-50 text-red-600 border-red-100",
       action: () => go("inboundOrderList"),
       disabled: false,
     },
     {
+      id: "outboundOrders",
+      label: "Lệnh xuất",
+      icon: ClipboardList,
+      color: "bg-rose-50 text-rose-600 border-rose-100",
+      action: () => go("outboundOrderList"),
+      disabled: false,
+    },
+    {
       id: "tasks",
-      label: "Danh sách task",
+      label: "DS task",
       icon: ListChecks,
       color: "bg-blue-50 text-blue-600 border-blue-100",
       action: () => go("task"),
@@ -33,7 +41,7 @@ export function ScreenHome({ go }: { go: (s: Screen) => void }) {
     },
     {
       id: "vehicle",
-      label: "Duyệt xe",
+      label: "Gom tuyến",
       icon: Truck,
       color: "bg-amber-50 text-amber-600 border-amber-100",
       action: () => go("vehicleConfirm"),
@@ -41,10 +49,18 @@ export function ScreenHome({ go }: { go: (s: Screen) => void }) {
     },
     {
       id: "dashboard",
-      label: "Dashboard",
+      label: "Nhân sự",
       icon: LayoutDashboard,
       color: "bg-emerald-50 text-emerald-600 border-emerald-100",
       action: () => go("hrDashboard"),
+      disabled: false,
+    },
+    {
+      id: "scheduleRegister",
+      label: "Đăng ký lịch",
+      icon: Calendar,
+      color: "bg-indigo-50 text-indigo-600 border-indigo-100",
+      action: () => go("scheduleRegister"),
       disabled: false,
     },
   ];
@@ -114,7 +130,7 @@ export function ScreenHome({ go }: { go: (s: Screen) => void }) {
         <div>
           <h3 className="text-[12px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-0.5">Tiện ích nhanh</h3>
           <Card className="p-3">
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-5 gap-1.5">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 return (

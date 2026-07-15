@@ -56,8 +56,8 @@ export function Input(props: any) {
   return <input {...props} className={`h-11 w-full px-3 rounded-lg border border-slate-200 bg-white text-[14px] focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand ${props.className || ""}`} />;
 }
 
-export function Card({ children, className = "" }: any) {
-  return <div className={`bg-white rounded-2xl border border-slate-200/80 shadow-sm ${className}`}>{children}</div>;
+export function Card({ children, className = "", ...props }: any) {
+  return <div {...props} className={`bg-white rounded-2xl border border-slate-200/80 shadow-sm ${className}`}>{children}</div>;
 }
 
 export function SectionTitle({ icon: Icon, title, action }: any) {

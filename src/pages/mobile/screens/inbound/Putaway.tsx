@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Camera, CheckCircle2, Clock, RefreshCw, XCircle } from "lucide-react";
+import { Camera, CheckCircle2, Clock, Scan, XCircle } from "lucide-react";
 import { Badge, Btn, Card } from "../../components/ui";
 import { TopBar } from "../../components/layout";
 
@@ -43,11 +43,26 @@ export function ScreenPutaway({ back, goHome }: { back: () => void; goHome: () =
     goHome();
   };
 
-  const refreshLocation = (index: number) => {
-    const item = items[index];
-    const currentIdx = item.locationList.indexOf(item.location);
-    const nextIdx = (currentIdx + 1) % item.locationList.length;
-    setItems((prev) => prev.map((it, i) => i === index ? { ...it, location: it.locationList[nextIdx] } : it));
+  const [showScanModal, setShowScanModal] = useState(false);
+  const [showScanSuccessToast, setShowScanSuccessToast] = useState(false);
+
+  const handleScanLocation = (index: number) => {
+    setShowScanModal(true);
+    setTimeout(() => {
+      setItems((prev) =>
+        prev.map((it, i) => {
+          if (i === index) {
+            const currentIdx = it.locationList.indexOf(it.location);
+            const nextIdx = (currentIdx + 1) % it.locationList.length;
+            return { ...it, location: it.locationList[nextIdx] };
+          }
+          return it;
+        })
+      );
+      setShowScanModal(false);
+      setShowScanSuccessToast(true);
+      setTimeout(() => setShowScanSuccessToast(false), 2000);
+    }, 1200);
   };
 
   return (
@@ -104,10 +119,11 @@ export function ScreenPutaway({ back, goHome }: { back: () => void; goHome: () =
                     ))}
                   </select>
                   <button
-                    onClick={() => refreshLocation(idx)}
-                    className="h-9 w-9 rounded-lg border border-slate-200 bg-white flex items-center justify-center"
+                    onClick={() => handleScanLocation(idx)}
+                    className="h-9 w-9 rounded-lg border border-brand bg-brand/5 flex items-center justify-center active:scale-95 transition-all animate-pulse"
+                    title="Quét vị trí"
                   >
-                    <RefreshCw className="w-4 h-4 text-slate-500" />
+                    <Scan className="w-4 h-4 text-brand" />
                   </button>
                 </div>
               </div>
@@ -163,6 +179,43 @@ export function ScreenPutaway({ back, goHome }: { back: () => void; goHome: () =
               <Btn size="sm" full icon={Clock} onClick={handleExtend}>Gia hạn</Btn>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Scan Modal */}
+      {showScanModal && (
+        <div className="absolute inset-0 z-50 bg-black flex flex-col justify-between p-6 animate-in fade-in zoom-in duration-200">
+          <div className="flex items-center justify-between text-white mt-8">
+            <div className="text-[16px] font-bold">Quét mã vị trí lưu trữ</div>
+            <button onClick={() => setShowScanModal(false)} className="text-white bg-white/20 p-2 rounded-full">
+              <XCircle className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="relative w-64 h-64 mx-auto rounded-3xl border-2 border-brand/80 overflow-hidden flex items-center justify-center">
+            {/* Corner brackets */}
+            <div className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-brand rounded-tl-md" />
+            <div className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-brand rounded-tr-md" />
+            <div className="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-brand rounded-bl-md" />
+            <div className="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-brand rounded-tr-md" />
+            
+            {/* Animated Laser line */}
+            <div className="w-full h-1 bg-brand absolute top-1/2 -translate-y-1/2 animate-pulse shadow-[0_0_8px_#ea580c]" />
+            
+            <div className="text-white/60 text-[12px] text-center px-4 mt-20">
+              Di chuyển camera đến mã vạch vị trí (Rack G04...) để quét
+            </div>
+          </div>
+          
+          <div className="text-center text-white/80 text-[13px] mb-8">
+            Đang tìm kiếm mã vạch vị trí lưu trữ...
+          </div>
+        </div>
+      )}
+
+      {showScanSuccessToast && (
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 shadow-lg z-50 animate-bounce">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Đã quét vị trí thành công!
         </div>
       )}
     </div>

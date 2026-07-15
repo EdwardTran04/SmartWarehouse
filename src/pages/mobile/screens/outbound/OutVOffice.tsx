@@ -14,10 +14,18 @@ type Signatory = {
   unit: string;
 };
 
+type Recipient = {
+  id: string;
+  name: string;
+  title: string;
+  unit: string;
+};
+
 type SignatureTemplate = {
   id: string;
   name: string;
   signatories: Signatory[];
+  recipients: Recipient[];
 };
 
 const SIGNATURE_TEMPLATES: SignatureTemplate[] = [
@@ -29,6 +37,10 @@ const SIGNATURE_TEMPLATES: SignatureTemplate[] = [
       { id: "NV-002", name: "Nguyễn Hữu An", title: "Nhân viên KCS", unit: "Kho HN01" },
       { id: "NV-003", name: "Mai Thị Lan", title: "Kế toán kho", unit: "Phòng TCKT" },
     ],
+    recipients: [
+      { id: "NV-101", name: "Lê Văn Tiến", title: "Giám đốc kho", unit: "Ban Giám đốc" },
+      { id: "NV-102", name: "Hoàng Thị Mai", title: "Trưởng phòng KSNB", unit: "Phòng KSNB" },
+    ]
   },
   {
     id: "MT2",
@@ -39,6 +51,10 @@ const SIGNATURE_TEMPLATES: SignatureTemplate[] = [
       { id: "NV-004", name: "Đỗ Minh Khôi", title: "NV kho", unit: "Kho HN01" },
       { id: "NV-005", name: "Phạm Thị Hằng", title: "Kế toán kho", unit: "Phòng TCKT" },
     ],
+    recipients: [
+      { id: "NV-101", name: "Lê Văn Tiến", title: "Giám đốc kho", unit: "Ban Giám đốc" },
+      { id: "NV-103", name: "Phạm Văn Đức", title: "Trưởng bộ phận Vận chuyển", unit: "Phòng Điều hành" },
+    ]
   },
   {
     id: "MT3",
@@ -47,6 +63,9 @@ const SIGNATURE_TEMPLATES: SignatureTemplate[] = [
       { id: "NV-001", name: "Trần Văn Kho", title: "Thủ kho", unit: "Kho HN01" },
       { id: "NV-003", name: "Mai Thị Lan", title: "Kế toán kho", unit: "Phòng TCKT" },
     ],
+    recipients: [
+      { id: "NV-102", name: "Hoàng Thị Mai", title: "Trưởng phòng KSNB", unit: "Phòng KSNB" },
+    ]
   },
 ];
 
@@ -103,20 +122,25 @@ export function ScreenOutVOffice({ back }: { back: () => void }) {
         </Card>
 
         {/* Mẫu chân ký - dropdown */}
-        <Card className="p-4 space-y-3">
-          <div className="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Mẫu chân ký</div>
-          <select
-            value={selectedTemplate}
-            onChange={(e) => setSelectedTemplate(e.target.value)}
-            className="w-full h-11 px-3 rounded-lg border border-slate-200 text-[13px] bg-white"
-          >
-            {SIGNATURE_TEMPLATES.map((t) => (
-              <option key={t.id} value={t.id}>{t.name}</option>
-            ))}
-          </select>
+        <Card className="p-4 space-y-4">
+          <div className="space-y-1.5">
+            <div className="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Mẫu chân ký</div>
+            <select
+              value={selectedTemplate}
+              onChange={(e) => setSelectedTemplate(e.target.value)}
+              className="w-full h-11 px-3 rounded-lg border border-slate-200 text-[13px] bg-white"
+            >
+              {SIGNATURE_TEMPLATES.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+          </div>
 
           {/* Danh sách người ký */}
           <div className="space-y-2">
+            <div className="text-[11px] uppercase tracking-wider font-semibold text-slate-400 flex items-center gap-1.5">
+              <PenLine className="w-3.5 h-3.5 text-brand" /> Danh sách người ký ({currentTemplate.signatories.length})
+            </div>
             {currentTemplate.signatories.map((s, i) => (
               <div key={s.id} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center shrink-0">
@@ -127,6 +151,25 @@ export function ScreenOutVOffice({ back }: { back: () => void }) {
                   <div className="text-[11.5px] text-slate-600">{s.title} - {s.unit}</div>
                 </div>
                 <div className="text-[10px] text-slate-400 font-medium">#{i + 1}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Danh sách người nhận */}
+          <div className="space-y-2 pt-2 border-t border-slate-100">
+            <div className="text-[11px] uppercase tracking-wider font-semibold text-slate-400 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-indigo-600" /> Danh sách người nhận ({currentTemplate.recipients.length})
+            </div>
+            {currentTemplate.recipients.map((r, i) => (
+              <div key={r.id} className="flex items-start gap-3 p-3 bg-indigo-50/30 rounded-xl border border-indigo-100">
+                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
+                  <User className="w-4 h-4 text-indigo-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-[13px] text-slate-900">{r.name} - {r.id}</div>
+                  <div className="text-[11.5px] text-slate-600">{r.title} - {r.unit}</div>
+                </div>
+                <div className="text-[10px] text-indigo-400 font-medium">#{i + 1}</div>
               </div>
             ))}
           </div>

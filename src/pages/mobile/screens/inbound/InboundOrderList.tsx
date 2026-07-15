@@ -46,9 +46,11 @@ export function ScreenInboundOrderList({ back, goReceive }: { back: () => void; 
   const filtered = tab === "all" ? ORDERS : ORDERS.filter((o) => o.status === tab);
 
   const doneMonth = 138;
-  const totalMonth = 142;
+  const doneMonthWeight = 165.6;
+  const doneMonthVolume = 662.4;
   const doneYear = 1802;
-  const totalYear = 1847;
+  const doneYearWeight = 2162.4;
+  const doneYearVolume = 8649.6;
 
   const countOf = (status: TabType) =>
     status === "all" ? ORDERS.length : ORDERS.filter((o) => o.status === status).length;
@@ -61,15 +63,37 @@ export function ScreenInboundOrderList({ back, goReceive }: { back: () => void; 
         <Card className="p-3">
           <div className="grid grid-cols-2 gap-4 text-[12px] text-slate-600">
             <div>
-              <div className="text-slate-500 mb-0.5">Lũy kế tháng</div>
-              <div className="text-[14px] font-bold text-slate-900">
-                {doneMonth} <span className="text-slate-400 font-normal">/</span> {totalMonth}
+              <div className="text-slate-500 font-semibold mb-1 text-[11px] uppercase tracking-wider">Lũy kế tháng</div>
+              <div className="space-y-1">
+                <div className="flex justify-between items-center border-b border-slate-100 pb-1">
+                  <span className="text-slate-400">Số lệnh:</span>
+                  <span className="font-bold text-slate-800 text-[13px]">{doneMonth}</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-100 pb-1">
+                  <span className="text-slate-400">Khối lượng:</span>
+                  <span className="font-bold text-slate-800 text-[13px]">{doneMonthWeight.toLocaleString()} tấn</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Thể tích:</span>
+                  <span className="font-bold text-slate-800 text-[13px]">{doneMonthVolume} m³</span>
+                </div>
               </div>
             </div>
-            <div>
-              <div className="text-slate-500 mb-0.5">Lũy kế năm</div>
-              <div className="text-[14px] font-bold text-slate-900">
-                {doneYear} <span className="text-slate-400 font-normal">/</span> {totalYear}
+            <div className="border-l border-slate-100 pl-4">
+              <div className="text-slate-500 font-semibold mb-1 text-[11px] uppercase tracking-wider">Lũy kế năm</div>
+              <div className="space-y-1">
+                <div className="flex justify-between items-center border-b border-slate-100 pb-1">
+                  <span className="text-slate-400">Số lệnh:</span>
+                  <span className="font-bold text-slate-800 text-[13px]">{doneYear.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-100 pb-1">
+                  <span className="text-slate-400">Khối lượng:</span>
+                  <span className="font-bold text-slate-800 text-[13px]">{doneYearWeight.toLocaleString()} tấn</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Thể tích:</span>
+                  <span className="font-bold text-slate-800 text-[13px]">{doneYearVolume.toLocaleString()} m³</span>
+                </div>
               </div>
             </div>
           </div>

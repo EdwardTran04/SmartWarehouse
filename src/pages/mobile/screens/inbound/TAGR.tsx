@@ -22,15 +22,16 @@ type TagrItem = {
   kgFailed: number;
   m3Failed: number;
   isPassed: boolean;
+  value: number;
 };
 
 const TAGR_ITEMS: TagrItem[] = [
-  { sku: "SP-A001", name: "Galaxy A15 128GB", rfid: "RFID-0001-A1", productType: "Điện thoại", productTypeVi: "Điện thoại", hasSerial: true, serial: "SN-2026-0012345", qtyPassed: 800, kgPassed: 240, m3Passed: 0.48, qtyFailed: 0, kgFailed: 0, m3Failed: 0, isPassed: true },
-  { sku: "SP-A002", name: "Galaxy A25 256GB", rfid: "RFID-0002-A1", productType: "Điện thoại", productTypeVi: "Điện thoại", hasSerial: true, serial: "SN-2026-0012346", qtyPassed: 598, kgPassed: 180, m3Passed: 0.36, qtyFailed: 2, kgFailed: 0.6, m3Failed: 0.001, isPassed: false },
-  { sku: "SP-A003", name: "Tai nghe Buds Pro", rfid: "RFID-0003-B2", productType: "Phụ kiện", productTypeVi: "Phụ kiện", hasSerial: true, serial: "SN-2026-0012347", qtyPassed: 1195, kgPassed: 48, m3Passed: 0.24, qtyFailed: 5, kgFailed: 0.2, m3Failed: 0.001, isPassed: false },
-  { sku: "SP-A004", name: "Cáp sạc USB-C 1m", rfid: "RFID-0004-C3", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, qtyPassed: 50, kgPassed: 5, m3Passed: 0.1, qtyFailed: 0, kgFailed: 0, m3Failed: 0, isPassed: true },
-  { sku: "SP-A005", name: "Ống lót máy", rfid: "RFID-0005-D4", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, qtyPassed: 118, kgPassed: 12, m3Passed: 0.18, qtyFailed: 2, kgFailed: 0.2, m3Failed: 0.003, isPassed: false },
-  { sku: "SP-A006", name: "Keo dán chuyên dụng", rfid: "RFID-0006-E5", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, qtyPassed: 35, kgPassed: 3.5, m3Passed: 0.07, qtyFailed: 0, kgFailed: 0, m3Failed: 0, isPassed: true },
+  { sku: "SP-A001", name: "Galaxy A15 128GB", rfid: "RFID-0001-A1", productType: "Điện thoại", productTypeVi: "Điện thoại", hasSerial: true, serial: "SN-2026-0012345", qtyPassed: 800, kgPassed: 240, m3Passed: 0.48, qtyFailed: 0, kgFailed: 0, m3Failed: 0, isPassed: true, value: 4000000000 },
+  { sku: "SP-A002", name: "Galaxy A25 256GB", rfid: "RFID-0002-A1", productType: "Điện thoại", productTypeVi: "Điện thoại", hasSerial: true, serial: "SN-2026-0012346", qtyPassed: 598, kgPassed: 180, m3Passed: 0.36, qtyFailed: 2, kgFailed: 0.6, m3Failed: 0.001, isPassed: false, value: 3600000000 },
+  { sku: "SP-A003", name: "Tai nghe Buds Pro", rfid: "RFID-0003-B2", productType: "Phụ kiện", productTypeVi: "Phụ kiện", hasSerial: true, serial: "SN-2026-0012347", qtyPassed: 1195, kgPassed: 48, m3Passed: 0.24, qtyFailed: 5, kgFailed: 0.2, m3Failed: 0.001, isPassed: false, value: 2400000000 },
+  { sku: "SP-A004", name: "Cáp sạc USB-C 1m", rfid: "RFID-0004-C3", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, qtyPassed: 50, kgPassed: 5, m3Passed: 0.1, qtyFailed: 0, kgFailed: 0, m3Failed: 0, isPassed: true, value: 10000000 },
+  { sku: "SP-A005", name: "Ống lót máy", rfid: "RFID-0005-D4", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, qtyPassed: 118, kgPassed: 12, m3Passed: 0.18, qtyFailed: 2, kgFailed: 0.2, m3Failed: 0.003, isPassed: false, value: 60000000 },
+  { sku: "SP-A006", name: "Keo dán chuyên dụng", rfid: "RFID-0006-E5", productType: "Vật tư", productTypeVi: "Vật tư", hasSerial: false, qtyPassed: 35, kgPassed: 3.5, m3Passed: 0.07, qtyFailed: 0, kgFailed: 0, m3Failed: 0, isPassed: true, value: 15000000 },
 ];
 
 const STATS = {
@@ -38,10 +39,19 @@ const STATS = {
   qtyPassed: TAGR_ITEMS.reduce((s, i) => s + i.qtyPassed, 0),
   kgPassed: TAGR_ITEMS.reduce((s, i) => s + i.kgPassed, 0),
   m3Passed: TAGR_ITEMS.reduce((s, i) => s + i.m3Passed, 0),
+  valuePassed: 4025000000,
   totalFailed: TAGR_ITEMS.filter((i) => !i.isPassed).length,
   qtyFailed: TAGR_ITEMS.reduce((s, i) => s + i.qtyFailed, 0),
   kgFailed: TAGR_ITEMS.reduce((s, i) => s + i.kgFailed, 0),
   m3Failed: TAGR_ITEMS.reduce((s, i) => s + i.m3Failed, 0),
+  valueFailed: 16000000,
+};
+
+const formatMoney = (val: number) => {
+  if (val >= 1000000000) {
+    return (val / 1000000000).toFixed(2) + " tỷ";
+  }
+  return (val / 1000000).toFixed(1) + " triệu";
 };
 
 export function ScreenTAGR({ back, goVOffice }: { back: () => void; goVOffice: () => void }) {
@@ -64,12 +74,17 @@ export function ScreenTAGR({ back, goVOffice }: { back: () => void; goVOffice: (
                 <div className="text-[10px] text-slate-500">Hàng đạt</div>
               </div>
             </div>
-            <div className="mt-2 text-[11px] text-slate-600">
-              <span className="font-medium">{STATS.qtyPassed.toLocaleString()} cái</span>
-              <span className="text-slate-400 mx-1">·</span>
-              <span className="font-medium">{STATS.kgPassed.toLocaleString()} kg</span>
-              <span className="text-slate-400 mx-1">·</span>
-              <span className="font-medium">{STATS.m3Passed.toFixed(2)} m³</span>
+            <div className="mt-2 text-[11px] text-slate-600 space-y-0.5">
+              <div>
+                <span className="font-medium">{STATS.qtyPassed.toLocaleString()} cái</span>
+                <span className="text-slate-400 mx-1">·</span>
+                <span className="font-medium">{STATS.kgPassed.toLocaleString()} kg</span>
+                <span className="text-slate-400 mx-1">·</span>
+                <span className="font-medium">{STATS.m3Passed.toFixed(2)} m³</span>
+              </div>
+              <div className="text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-1.5 py-0.5 mt-1 font-bold inline-block text-[10px]">
+                Trị giá: {formatMoney(STATS.valuePassed)}
+              </div>
             </div>
           </Card>
 
@@ -83,12 +98,17 @@ export function ScreenTAGR({ back, goVOffice }: { back: () => void; goVOffice: (
                 <div className="text-[10px] text-slate-500">Hàng không đạt</div>
               </div>
             </div>
-            <div className="mt-2 text-[11px] text-slate-600">
-              <span className="font-medium">{STATS.qtyFailed} cái</span>
-              <span className="text-slate-400 mx-1">·</span>
-              <span className="font-medium">{STATS.kgFailed} kg</span>
-              <span className="text-slate-400 mx-1">·</span>
-              <span className="font-medium">{STATS.m3Failed.toFixed(3)} m³</span>
+            <div className="mt-2 text-[11px] text-slate-600 space-y-0.5">
+              <div>
+                <span className="font-medium">{STATS.qtyFailed} cái</span>
+                <span className="text-slate-400 mx-1">·</span>
+                <span className="font-medium">{STATS.kgFailed} kg</span>
+                <span className="text-slate-400 mx-1">·</span>
+                <span className="font-medium">{STATS.m3Failed.toFixed(3)} m³</span>
+              </div>
+              <div className="text-rose-700 bg-rose-50 border border-rose-100 rounded px-1.5 py-0.5 mt-1 font-bold inline-block text-[10px]">
+                Trị giá: {formatMoney(STATS.valueFailed)}
+              </div>
             </div>
           </Card>
         </div>
@@ -125,6 +145,10 @@ export function ScreenTAGR({ back, goVOffice }: { back: () => void; goVOffice: (
               <div className="flex items-center gap-1">
                 <span className="text-slate-400">RFID:</span>
                 <span className="font-medium text-slate-800">{it.rfid}</span>
+              </div>
+              <div className="flex items-center gap-1 col-span-2 mt-0.5 text-indigo-600">
+                <span className="text-slate-500">Giá trị hàng hóa:</span>
+                <span className="font-bold">{formatMoney(it.value)}</span>
               </div>
             </div>
 
